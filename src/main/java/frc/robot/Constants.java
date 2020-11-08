@@ -16,6 +16,20 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+    // Feeder port
     public final static int kFeederPort = 0;
     
+    // FeederArm port
+    public final static int kFeederArmPort = 3;
+    
+    // Elevator port
+    public final static int kElevatorPort = 2;
+
+    // Tank Drive ports
+    public final static int kForwardLeftPort = 0;
+    public final static int kForwardRightPort = 1;
+    public final static int kMiddleLeftPort = 5;
+    public final static int kMiddleRightPort = 6;
+    public final static int kRearLeftPort = 1;
+    public final static int kRearRightPort = 3;
 }

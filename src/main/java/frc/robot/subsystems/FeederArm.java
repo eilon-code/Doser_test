@@ -8,6 +8,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
@@ -23,12 +24,17 @@ public class FeederArm extends SubsystemBase {
   
 
   public FeederArm() {
-    this.master = new WPI_TalonSRX(Constants.kFeederPort);
+    this.master = new WPI_TalonSRX(Constants.kFeederArmPort);
   }
 
   private void conficMotor(){
     this.master.setNeutralMode(NeutralMode.Brake);
     this.master.setInverted(InvertType.None);
+    this.master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
+  }
+
+  public int getPosition(){
+    return this.master.getSelectedSensorPosition();
   }
 
   public void set(double power){
