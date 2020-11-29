@@ -26,9 +26,14 @@ public class Elevator extends SubsystemBase {
   private final WPI_TalonSRX master;
   private final TankDrive drive;
 
+  private final int pidSlotID;
+
+
   public Elevator(TankDrive tankDrive) {
     this.master = new WPI_TalonSRX(Constants.kElevatorPort);
     this.drive = tankDrive;
+    this.pidSlotID = 3;
+    this.conficMotor();
   }
 
   private void conficMotor(){
@@ -37,7 +42,6 @@ public class Elevator extends SubsystemBase {
     this.master.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Absolute);
     this.master.configForwardLimitSwitchSource(LimitSwitchSource.FeedbackConnector, LimitSwitchNormal.NormallyOpen);
     this.master.configReverseLimitSwitchSource(RemoteLimitSwitchSource.RemoteTalonSRX, LimitSwitchNormal.NormallyClosed, Constants.kMiddleLeftPort);
-
   }
 
   public int getPosition(){
@@ -51,6 +55,10 @@ public class Elevator extends SubsystemBase {
   public void stop(){
     this.master.stopMotor();
   }
+  
+  public void setPosition(double pos){
+    this.master.set(ControlMode.Position, pos);
+  }
 
   @Override
   public void periodic() {
@@ -58,5 +66,21 @@ public class Elevator extends SubsystemBase {
     if (this.drive.getIsElevatorReverseLimit()){
       this.master.setSelectedSensorPosition(0);
     }
+  }
+
+  public void configPIDSlot(double kp, double ki, double kd, double kf, int slot) {
+    this.master.config_kP(slot, kp);
+    this.master.config_kI(slot, ki);
+    this.master.config_kD(slot, kd);
+    this.master.config_kF(slot, kf);
+  }
+
+  public void setPosition(int pos){
+    this.master.selectProfileSlot(this.pidSlotID, 0);
+    this.master.set(ControlMode.Position, pos);
+  }
+
+  public int getPIDSlotID() {
+    return this.pidSlotID;
   }
 }

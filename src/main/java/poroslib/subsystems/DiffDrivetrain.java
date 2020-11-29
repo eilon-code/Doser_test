@@ -18,22 +18,22 @@ public abstract class DiffDrivetrain extends Drivetrain implements PidActionSubs
 	
 	protected SpeedController leftController;
 	protected SpeedController rightController;
-	
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public DiffDrivetrain(SpeedController leftController, SpeedController rightController)
     {
-			this.leftController = leftController;
-			this.rightController = rightController;
+		this.leftController = leftController;
+		this.rightController = rightController;
     	driver = new DifferentialDriver(leftController , rightController);
-		}
-    
+	}
+    /////////////////////////// same function!!!!!!!!!!!!!!!!!!!!!! /////////////////////////////////////////////////////
     public DiffDrivetrain(SpeedController leftController, SpeedController rightController, boolean isReversed)
     {
-			this.leftController = leftController;
-			this.rightController = rightController;
+		this.leftController = leftController;
+		this.rightController = rightController;
     	driver = new DifferentialDriver(leftController , rightController);
     	this.SetIsReversed(isReversed);
     }   
-    
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     public void arcadeDrive(double speed, double rotate, double maxOutput)
     {
     	this.driver.setMaxOutput(maxOutput);

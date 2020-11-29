@@ -7,6 +7,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
 import com.ctre.phoenix.motorcontrol.InvertType;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
@@ -33,9 +34,12 @@ public class TankDrive extends DiffDrivetrain {
 
   private AHRS navx;
 
+  private final int pidSlotID;
+
   public TankDrive() {
     super(new WPI_TalonSRX(Constants.kForwardLeftPort), new WPI_TalonSRX(Constants.kForwardRightPort));
     configMotors();
+    this.pidSlotID = 3;
   }
   
   private void createMotors(){
@@ -92,7 +96,39 @@ public class TankDrive extends DiffDrivetrain {
     setInvertion();
     setSensors();
   }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+  public void configPIDSlot(double kp, double ki, double kd, double kf, int slot) {
+    this.masterLeft.config_kP(slot, kp);
+    this.masterLeft.config_kI(slot, ki);
+    this.masterLeft.config_kD(slot, kd);
+    this.masterLeft.config_kF(slot, kf);
 
+    this.masterRight.config_kP(slot, kp);
+    this.masterRight.config_kI(slot, ki);
+    this.masterRight.config_kD(slot, kd);
+    this.masterRight.config_kF(slot, kf);
+  }
+
+  public void setLeftPosition(double pos){
+    this.masterLeft.selectProfileSlot(this.pidSlotID, 0);
+    this.masterLeft.set(ControlMode.PercentOutput, pos);
+    // Followers
+    this.middleLeft.follow(this.masterLeft);
+    this.rearLeft.follow(this.masterLeft);
+  }
+  
+  public void setRightPosition(double pos){
+    this.masterRight.selectProfileSlot(this.pidSlotID, 0);
+    this.masterRight.set(ControlMode.PercentOutput, pos);
+    // Followers
+    this.middleRight.follow(this.masterRight);
+    this.rearRight.follow(this.masterRight);
+  }
+
+  public int getPIDSlotID() {
+    return this.pidSlotID;
+  }
+////////////////////////////////////////////////////////////////////////////////////////////////////////
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -116,7 +152,7 @@ public class TankDrive extends DiffDrivetrain {
     return this.navx.getYaw();
   }
 
-  /** 
+  /**
    * get if the bottom elevator limit switch is closed
   */
   public boolean getIsElevatorReverseLimit(){
